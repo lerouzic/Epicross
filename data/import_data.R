@@ -46,9 +46,9 @@ Fitness  <- data.pheno$nb_siliq_total_estim
 final.data <- data.frame(
 	row.names   = Position,
 	Mother_line = factor(Mother_line), 
-	Mother_pop  = factor(vapply(strsplit(Mother_line, "_"), "[", 1, FUN.VALUE="A")),
+	Mother_pop  = factor(vapply(strsplit(Mother_line, "-"), "[", 1, FUN.VALUE="A")),
 	Father_line = factor(Father_line),
-	Father_pop  = factor(vapply(strsplit(Father_line, "_"), "[", 1, FUN.VALUE="A")),
+	Father_pop  = factor(vapply(strsplit(Father_line, "-"), "[", 1, FUN.VALUE="A")),
 	Gen         = factor(Gen),
 	Weight      = round(as.numeric(Weight), digits=3),
 	Fitness     = round(as.numeric(Fitness), digits=0))
