@@ -76,7 +76,7 @@ hglm.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRU
 		rep(1, length(listZ)),
 		var(y))
 
-	hglm(y=y, X=X, Z=Z, RandC=sapply(listZ, ncol), startval=startval, verbose=TRUE)
+	hglm(y=y, X=X, Z=Z, RandC=sapply(listZ, ncol), startval=startval, verbose=FALSE)
 }
 
 
@@ -85,5 +85,16 @@ m.A       <- hglm.wrapper(dd, A.pop=TRUE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALS
 m.A.D     <- hglm.wrapper(dd, A.pop=TRUE, D.pop=TRUE,  AA.pop=FALSE, DD.pop=FALSE)
 m.A.D.AA  <- hglm.wrapper(dd, A.pop=TRUE, D.pop=TRUE,  AA.pop=TRUE,  DD.pop=FALSE)
 m.A.D.DD  <- hglm.wrapper(dd, A.pop=TRUE, D.pop=TRUE,  AA.pop=FALSE, DD.pop=TRUE)
+
+# The last one does not converge
 m.A.D.AA.DD<-hglm.wrapper(dd, A.pop=TRUE, D.pop=TRUE,  AA.pop=TRUE,  DD.pop=TRUE)
+
+
+ml.A       <- hglm.wrapper(dd, A.pop=FALSE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALSE, A.line=TRUE, D.line=FALSE, AA.line=FALSE, DD.line=FALSE)
+ml.A.D     <- hglm.wrapper(dd, A.pop=FALSE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALSE, A.line=TRUE, D.line=TRUE, AA.line=FALSE, DD.line=FALSE)
+ml.A.D.AA  <- hglm.wrapper(dd, A.pop=FALSE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALSE, A.line=TRUE, D.line=TRUE, AA.line=TRUE, DD.line=FALSE)
+ml.A.D.DD  <- hglm.wrapper(dd, A.pop=FALSE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALSE, A.line=TRUE, D.line=TRUE, AA.line=FALSE, DD.line=TRUE)
+
+# Does not converge
+ml.A.D.AA.DD<-hglm.wrapper(dd, A.pop=FALSE, D.pop=FALSE, AA.pop=FALSE, DD.pop=FALSE, A.line=TRUE, D.line=TRUE, AA.line=TRUE, DD.line=TRUE)
 
