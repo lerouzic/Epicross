@@ -35,10 +35,10 @@ data.pheno <- data.pheno[-dupl.lines,]     # From this point previous line numbe
 
 # To be kept in the data file:
 Position <- data.pheno$Position
-Mother_line   <- vapply(Position, function(pos) data.position$Mother[data.position$Position == pos], FUN.VALUE="A")
-Gen           <- vapply(Position, function(pos) data.position$Gen[data.position$Position == pos], FUN.VALUE="A")
-Cross         <- vapply(Position, function(pos) data.position$Cross[data.position$Position == pos],  FUN.VALUE="A")
-Father_line   <- vapply(seq_along(Position), function(i) data.cross$Pere[data.cross$Mere == Mother_line[i] & data.cross$type.cross == Cross[i]], FUN.VALUE="A")
+Mother_line   <- vapply(Position, function(pos) as.character(data.position$Mother[data.position$Position == pos]), FUN.VALUE="A")
+Gen           <- vapply(Position, function(pos) as.character(data.position$Gen[data.position$Position == pos]), FUN.VALUE="A")
+Cross         <- vapply(Position, function(pos) as.character(data.position$Cross[data.position$Position == pos]),  FUN.VALUE="A")
+Father_line   <- vapply(seq_along(Position), function(i) as.character(data.cross$Pere[data.cross$Mere == Mother_line[i] & data.cross$type.cross == Cross[i]]), FUN.VALUE="A")
 
 Weight   <- data.pheno$Weight_tot
 Fitness  <- data.pheno$nb_siliq_total_estim
