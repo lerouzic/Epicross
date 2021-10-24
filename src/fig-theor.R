@@ -14,24 +14,26 @@ get.d.e <- function(P1=1, P2=-1, F1, F2) {
 	optim(c(d=0, e=0), fn=function(pp) (pp["d"]-(1/2)*pp["e"] + (1/2)*pp["e"]*pp["d"]^2-F1)^2 + (pp["d"]/2-pp["e"]/2+(1/8)*pp["e"]*pp["d"]^2-F2)^2)$par
 }
 
-layout(1)
+pdf("fig-theor1.pdf", width=5, height=5)
+	layout(1)
 
-plot(NULL, xlim=c(-1, 1), ylim=c(-1, 1), ylab="Phenotype", xlab="Dominance")
+	plot(NULL, xlim=c(-1, 1), ylim=c(-1, 1), ylab="Phenotype", xlab="Dominance")
+	
+	abline(h=c(-1,1), col="black")
+	
+	curve(get.pop("F1", a1=1, a2=-1, d=x, e=0), col="green", add=TRUE)
+	curve(get.pop("F2", a1=1, a2=-1, d=x, e=0), col="green", lty=2, add=TRUE)
+	
+	curve(get.pop("F1", a1=1, a2=-1, d=x, e=1), col="blue", add=TRUE)
+	curve(get.pop("F2", a1=1, a2=-1, d=x, e=1), col="blue", lty=2, add=TRUE)
+	
+	curve(get.pop("F1", a1=1, a2=-1, d=x, e=-1), col="red", add=TRUE)
+	curve(get.pop("F2", a1=1, a2=-1, d=x, e=-1), col="red", lty=2, add=TRUE)
+	
+	legend("topleft", lty=1, col=c("blue","green","red"), legend=c("e=1", "e=0", "e=-1"), bg="white")
+	legend("bottomright", lty=c(1,2), legend=c("F1","F2"), bg="white")
 
-abline(h=c(-1,1), col="black")
-
-curve(get.pop("F1", a1=1, a2=-1, d=x, e=0), col="green", add=TRUE)
-curve(get.pop("F2", a1=1, a2=-1, d=x, e=0), col="green", lty=2, add=TRUE)
-
-curve(get.pop("F1", a1=1, a2=-1, d=x, e=1), col="blue", add=TRUE)
-curve(get.pop("F2", a1=1, a2=-1, d=x, e=1), col="blue", lty=2, add=TRUE)
-
-curve(get.pop("F1", a1=1, a2=-1, d=x, e=-1), col="red", add=TRUE)
-curve(get.pop("F2", a1=1, a2=-1, d=x, e=-1), col="red", lty=2, add=TRUE)
-
-legend("topleft", lty=1, col=c("blue","green","red"), legend=c("e=1", "e=0", "e=-1"), bg="white")
-legend("bottomright", lty=c(1,2), legend=c("F1","F2"), bg="white")
-
+dev.off()
 
 
 ff1 <- seq(-0.8, 0.8, length.out=41)
@@ -40,12 +42,15 @@ ff2 <- seq(-0.8, 0.8, length.out=41)
 dd <- outer(ff1, ff2, function(ff1, ff2) mapply(ff1, ff2, FUN=function(fff1, fff2) get.d.e(F1=fff1, F2=fff2)["d"]))
 ee <- outer(ff1, ff2, function(ff1, ff2) mapply(ff1, ff2, FUN=function(fff1, fff2) get.d.e(F1=fff1, F2=fff2)["e"]))
 
-layout(t(1:2))
-contour(ff1, ff2, dd, xlab="F1", ylab="F2", main="Dominance")
-contour(ff1, ff2, ee, xlab="F1", ylab="F2", main="Epistasis")
+pdf("fig-theor2.pdf", width=10, height=5)
+	layout(t(1:2))
+	
+	contour(ff1, ff2, dd, xlab="F1", ylab="F2", main="Dominance")
+	contour(ff1, ff2, ee, xlab="F1", ylab="F2", main="Epistasis")
+	
+dev.off()
 
-
-# Multilocus approach
+# Multilocus approach (not for plotting, just some kind of theoretical exploration)
 
 .which.a  <- function(l) which(sapply(strsplit(noia:::effectsNamesGeneral(l), split=""), function(x) sum(x=="a") == 1 & sum(x=="d") == 0))
 .which.d  <- function(l) which(sapply(strsplit(noia:::effectsNamesGeneral(l), split=""), function(x) sum(x=="a") == 0 & sum(x=="d") == 1))
