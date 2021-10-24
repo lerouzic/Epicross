@@ -157,16 +157,16 @@ admb.TOP_OF_MAIN_SECTION.common <- "
 TOP_OF_MAIN_SECTION
 
 	arrmblsize = 400000000L;
-	// gradient_structure::set_ARRAY_MEMBLOCK_SIZE(200000L);
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(100000000L);
-	gradient_structure::set_MAX_NVAR_OFFSET(50000);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(50000000L);
+	// gradient_structure::set_ARRAY_MEMBLOCK_SIZE(2000000L);
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1000000000L);
+	gradient_structure::set_MAX_NVAR_OFFSET(500000);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(500000000L);
 "
 
 
-make.admb <- function(A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=TRUE, E.line=FALSE) {
+make.admb <- function(A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=TRUE, E.line=FALSE, prefix="model") {
 
-	model.name <- paste0("model", 
+	model.name <- paste0(prefix, 
 		if (A.pop)  "-ap" else "", 
 		if (A.line) "-al" else "",
 		if (D.pop)  "-dp" else "",
@@ -208,7 +208,7 @@ make.admb <- function(A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=
 
 
 
-admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=TRUE, E.line=FALSE) {
+admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=TRUE, E.line=FALSE, model.prefix=paste(letters[sample(1:26, 8)], collapse=""), clean=TRUE) {
 	.ac <- as.character
 	
 	dd <- dd[!is.na(dd[,trait]),]
@@ -333,11 +333,13 @@ admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRU
 		my.re     <- c(my.re,     "u_e_lin")
 	}	
 	
-	my.model <- make.admb(A.pop, A.line, D.pop, D.line, E.pop, E.line)
+	my.model <- make.admb(A.pop, A.line, D.pop, D.line, E.pop, E.line, prefix=model.prefix)
 	wd <- getwd()
 	setwd(dirname(my.model)) # do_admb does not deal well with paths. Let's move into the model directory
-	ans <- try(do_admb(basename(my.model), data=admb.data, param=admb.params[my.params], re=admb.re[my.re], verbose=FALSE))
+	ans <- try(do_admb(basename(my.model), data=admb.data, param=admb.params[my.params], re=admb.re[my.re], 
+	extra.args="-l1 1000000000 -l2 1000000000 -l3 1000000000 -nl1 1000000000 -nl2 1000000000 -nl3 1000000000", verbose=FALSE))
 	setwd(wd)
+	if(clean) unlink(my.model, recursive=TRUE)
 	ans
 }
 
