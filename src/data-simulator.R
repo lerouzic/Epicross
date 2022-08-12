@@ -67,23 +67,25 @@ simulate.data <- function(N.pop=6, N.lines.per.pop=4, N.cross.within=1, N.cross.
 					rep("F1", N.pop*N.lines.per.pop*N.cross.out*N.F1), rep("F2", N.pop*N.lines.per.pop*N.cross.out*N.F2))
 					
 	# Model coefficients from genet-model.R
-	coef.a      <- ifelse(moth == fath,         MODEL["P","a"], ifelse(gen == "F1", MODEL["F1","a"], MODEL["F2","a"]))
-	coef.a.pop  <- ifelse(moth.pop == fath.pop, MODEL["P","a"], ifelse(gen == "F1", MODEL["F1","a"], MODEL["F2","a"]))
-	coef.d      <- ifelse(moth == fath,         MODEL["P","d"], ifelse(gen == "F1", MODEL["F1","d"], MODEL["F2","d"]))
-	coef.d.pop  <- ifelse(moth.pop == fath.pop, MODEL["P","d"], ifelse(gen == "F1", MODEL["F1","d"], MODEL["F2","d"]))
-	coef.aa     <- ifelse(moth == fath,         MODEL["P","aa"],ifelse(gen == "F1", MODEL["F1","aa"],MODEL["F2","aa"]))
-	coef.aa.pop <- ifelse(moth.pop == fath.pop, MODEL["P","aa"],ifelse(gen == "F1", MODEL["F1","aa"],MODEL["F2","aa"]))
-	coef.ad     <- ifelse(moth == fath,         MODEL["P","ad"],ifelse(gen == "F1", MODEL["F1","ad"],MODEL["F2","ad"]))
-	coef.ad.pop <- ifelse(moth.pop == fath.pop, MODEL["P","ad"],ifelse(gen == "F1", MODEL["F1","ad"],MODEL["F2","ad"]))
-	coef.dd     <- ifelse(moth == fath,         MODEL["P","dd"],ifelse(gen == "F1", MODEL["F1","dd"],MODEL["F2","dd"]))
-	coef.dd.pop <- ifelse(moth.pop == fath.pop, MODEL["P","dd"],ifelse(gen == "F1", MODEL["F1","dd"],MODEL["F2","dd"]))
+	coef.amoth     <- ifelse(gen == "F1", MODEL["F1","a1"], MODEL["F2","a1"])
+	coef.amoth.pop <- ifelse(gen == "F1", MODEL["F1","a1"], MODEL["F2","a1"]))
+	coef.afath     <- ifelse(gen == "F1", MODEL["F1","a2"], MODEL["F2","a2"]))
+	coef.afath.pop <- ifelse(gen == "F1", MODEL["F1","a1"], MODEL["F2","a2"]))
+	coef.d         <- ifelse(moth == fath,         MODEL["P1","d"], ifelse(gen == "F1", MODEL["F1","d"], MODEL["F2","d"]))
+	coef.d.pop     <- ifelse(moth.pop == fath.pop, MODEL["P1","d"], ifelse(gen == "F1", MODEL["F1","d"], MODEL["F2","d"]))
+	coef.aa        <- ifelse(moth == fath,         MODEL["P1","aa"],ifelse(gen == "F1", MODEL["F1","aa"],MODEL["F2","aa"]))
+	coef.aa.pop    <- ifelse(moth.pop == fath.pop, MODEL["P1","aa"],ifelse(gen == "F1", MODEL["F1","aa"],MODEL["F2","aa"]))
+	coef.ad        <- ifelse(moth == fath,         MODEL["P1","ad"],ifelse(gen == "F1", MODEL["F1","ad"],MODEL["F2","ad"]))
+	coef.ad.pop    <- ifelse(moth.pop == fath.pop, MODEL["P1","ad"],ifelse(gen == "F1", MODEL["F1","ad"],MODEL["F2","ad"]))
+	coef.dd        <- ifelse(moth == fath,         MODEL["P1","dd"],ifelse(gen == "F1", MODEL["F1","dd"],MODEL["F2","dd"]))
+	coef.dd.pop    <- ifelse(moth.pop == fath.pop, MODEL["P1","dd"],ifelse(gen == "F1", MODEL["F1","dd"],MODEL["F2","dd"]))
 					
 	# Predicted phenotype
 	pred  <- mu +
-	         coef.a.pop*(pops[moth.pop] + pops[fath.pop]) +
-	         coef.a    *(lines[moth]    + lines[fath])    +
-	         coef.d.pop*dom.pops[inter.pop] + 
-	         coef.d    *dom[inter]          +
+		     coef.amoth    *lines[moth]    + coef.afath    *lines[fath]    +
+	         coef.amoth.pop*pops[moth.pop] + coef.afath.pop*pops[fath.pop] +
+	         coef.d.pop *dom.pops[inter.pop] + 
+	         coef.d     *dom[inter]          +
 	         coef.aa.pop*pops[moth.pop]*pops[fath.pop]*eps.pops[inter.pop] +
 	         coef.aa    *lines[moth]   *lines[fath]   *eps[inter]     +
 	         coef.ad.pop*(pops[moth.pop] + pops[fath.pop])*dom.pops[inter.pop]*eps.pops[inter.pop] +
