@@ -29,8 +29,6 @@ admb.DATA.common <-
 	init_vector model_d_lin(1,nobs)
 	init_vector model_aa_pop(1,nobs)
 	init_vector model_aa_lin(1,nobs)
-	init_vector model_ad_pop(1,nobs)
-	init_vector model_ad_lin(1,nobs)
 	init_vector model_dd_pop(1,nobs)
 	init_vector model_dd_lin(1,nobs)
 	
@@ -127,20 +125,12 @@ admb.PROCEDURE.specific.2 <- list(
 	d.lin  = "
 		                + model_d_lin(i) * (mean_d_lin + sigma_d_lin*u_d_lin(lin_inter(i)))",
 	aa.pop = "
-		                + model_aa_pop(i)*  sigma_a_pop*u_a_pop(pop_mother(i))
-		                                 *  sigma_a_pop*u_a_pop(pop_father(i)) 
+		                + model_aa_pop(i)*  sigma_a_pop*(u_a_pop(pop_mother(i)) - u_a_pop(pop_father(i))) / 2
+		                                 *  sigma_a_pop*(u_a_pop(pop_mother(i)) - u_a_pop(pop_father(i))) / 2
 		                                 * (mean_e_pop + sigma_e_pop*u_e_pop(pop_inter(i)))",
 	aa.lin = "
-		                + model_aa_lin(i)*  sigma_a_lin*u_a_lin(lin_mother(i))
-		                                 *  sigma_a_lin*u_a_lin(lin_father(i)) 
-		                                 * (mean_e_lin + sigma_e_lin*u_e_lin(lin_inter(i)))",
-	ad.pop = "
-		                + model_ad_pop(i)*  sigma_a_pop*(u_a_pop(pop_mother(i))+u_a_pop(pop_father(i)))
-		                                 * (mean_d_pop + sigma_d_pop*u_d_pop(pop_inter(i)))
-		                                 * (mean_e_pop + sigma_e_pop*u_e_pop(pop_inter(i)))",
-	ad.lin = "
-		                + model_ad_lin(i)*  sigma_a_lin*(u_a_lin(lin_mother(i))+u_a_lin(lin_father(i)))
-		                                 * (mean_d_lin + sigma_d_lin*u_d_lin(lin_inter(i)))
+		                + model_aa_lin(i)*  sigma_a_lin*(u_a_lin(lin_mother(i)) - u_a_lin(lin_father(i))) / 2
+		                                 *  sigma_a_lin*(u_a_lin(lin_mother(i)) - u_a_lin(lin_father(i))) / 2
 		                                 * (mean_e_lin + sigma_e_lin*u_e_lin(lin_inter(i)))",
 	dd.pop = "
 		                + model_dd_pop(i)* (mean_d_pop + sigma_d_pop*u_d_pop(pop_inter(i)))
@@ -189,8 +179,6 @@ make.admb <- function(A.pop=TRUE, A.line=FALSE, D.pop=TRUE, D.line=FALSE, E.pop=
 	if (A.line && E.line) eff <- c(eff, "aa.lin")
 	if (D.pop && E.pop)   eff <- c(eff, "dd.pop")
 	if (D.line && E.line) eff <- c(eff, "dd.lin")
-	if (A.pop && D.pop && E.pop)    eff <- c(eff, "ad.pop")
-	if (A.line && D.line && E.line) eff <- c(eff, "ad.lin")
 
 	cat(file=file.name, admb.DATA.common)
 	cat(file=file.name, admb.PARAMETER.common, append=TRUE)
@@ -241,8 +229,6 @@ admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRU
 	model.d.lin  <- if (D.line) ifelse(newm.lin == newf.lin, MODEL["P","d"],  ifelse(gen==1, MODEL["F1","d"],  MODEL["F2","d"]))  else zz
 	model.aa.pop <- if (E.pop)  ifelse(newm.pop == newf.pop, MODEL["P","aa"], ifelse(gen==1, MODEL["F1","aa"], MODEL["F2","aa"])) else zz
 	model.aa.lin <- if (E.line) ifelse(newm.lin == newf.lin, MODEL["P","aa"], ifelse(gen==1, MODEL["F1","aa"], MODEL["F2","aa"])) else zz
-	model.ad.pop <- if (E.pop)  ifelse(newm.pop == newf.pop, MODEL["P","ad"], ifelse(gen==1, MODEL["F1","ad"], MODEL["F2","ad"])) else zz
-	model.ad.lin <- if (E.line) ifelse(newm.lin == newf.lin, MODEL["P","ad"], ifelse(gen==1, MODEL["F1","ad"], MODEL["F2","ad"])) else zz
 	model.dd.pop <- if (E.pop)  ifelse(newm.pop == newf.pop, MODEL["P","dd"], ifelse(gen==1, MODEL["F1","dd"], MODEL["F2","dd"])) else zz
 	model.dd.lin <- if (E.line) ifelse(newm.lin == newf.lin, MODEL["P","dd"], ifelse(gen==1, MODEL["F1","dd"], MODEL["F2","dd"])) else zz
 	
@@ -272,8 +258,6 @@ admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRU
 		model_d_lin  = model.d.lin, 
 		model_aa_pop = model.aa.pop,
 		model_aa_lin = model.aa.lin, 
-		model_ad_pop = model.ad.pop, 
-		model_ad_lin = model.ad.lin,
 		model_dd_pop = model.dd.pop, 
 		model_dd_lin = model.dd.lin,
 		
@@ -345,7 +329,8 @@ admb.wrapper <- function(dd, trait="Weight", A.pop=TRUE, A.line=FALSE, D.pop=TRU
 
 
 admb.summ <- function(obj, what="estimates") {
-	stopifnot("admb" %in% class(obj))
+	if(!"admb" %in% class(obj))
+		return(NA)
 	
 	if (what == "estimates") 
 		ans <- list(
