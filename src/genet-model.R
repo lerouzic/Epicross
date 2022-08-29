@@ -19,7 +19,8 @@ MODEL <- model2
 
 
 fit.2pop <- function(P1, P2, F1, F2) {
-	ans <- try(optim(par=c(zR=unname((P1+P2))/2, a=unname((P2-P1))/2, d=unname(F1-(P1+P2)/2), e=0), 
+	start <- fit.2pop.noDD(P1, P2, F1, F2)
+	ans <- try(optim(par=start, 
 	      fn=function(pp) 
 	      	(P1 - (pp["zR"] - MODEL["P","a"] * pp["a"])) ^ 2 +
 	      	(P2 - (pp["zR"] + MODEL["P","a"] * pp["a"])) ^ 2 +
@@ -36,6 +37,7 @@ fit.2pop.noDD <- function(P1, P2, F1, F2) {
 	ans <- c(
 		zR = (P2+P1)/2,
 		a  = (P2-P1)/2)
+	if (ans["a"] == 0) ans["a"] <- 1e-16
 	F1s <- (F1-ans["zR"])/ans["a"]
 	F2s <- (F2-ans["zR"])/ans["a"]
 	ds <- 2*(F1s-F2s)
