@@ -54,7 +54,9 @@ AICpop <- list(
 	Fitness = t(mapply(cpops[1,], cpops[2,], FUN=function(p1, p2) { model.selection.cross(dd, p1, p2, trait="Fitness")$AIC})))
 delta.AICpop <- lapply(AICpop, function(x) t(apply(x, 1, function(xx) xx-min(xx))))
 
-barplot.AkaikeW(delta.AICpop)
+pdf("../results/F2AICpop.pdf", width=15, height=10)
+	barplot.AkaikeW(delta.AICpop)
+dev.off()
 
 # focus on lines
 lines <- unique(c(dd$Mother_line, dd$Father_line))
@@ -65,4 +67,6 @@ AICline <- list(
 	Fitness = do.call(rbind, mapply(clines[1,], clines[2,], FUN=function(p1, p2) { model.selection.cross(dd, p1, p2, trait="Fitness")$AIC}, SIMPLIFY=FALSE)))
 delta.AICline <- lapply(AICline, function(x) t(apply(x, 1, function(xx) xx-min(xx))))
 
-barplot.AkaikeW(delta.AICline)
+pdf("../results/F2AIClines.pdf", width=15, height=10)
+	barplot.AkaikeW(delta.AICline)
+dev.off()
