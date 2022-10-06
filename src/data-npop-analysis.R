@@ -173,40 +173,39 @@ pdf("../results/FnAICWlineMlin.pdf", width=15, height=10)
 dev.off()
 
 
-########### Random-effect linear model ##############
+################ Distribution of effects
 
-# Focus on populations
-
-rand.pop <- list(
-	Weight = list(
-		a      = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a")),
-		a.d    = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "d")),
-		a.aa   = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "aa")),
-		a.d.aa = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "d", "aa"))),
-	Fitness = list(
-		a      = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a")),
-		a.d    = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "d")),
-		a.aa   = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "aa")),
-		a.d.aa = fit.Npop.Fmu.rand(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "d", "aa"))))
-
-rand.pop.dAIC <- lapply(rand.pop, function(xx) { aic <- sapply(xx, function(xxx) xxx$likelihood$cAIC); aic-min(aic) })
-barplot.AkaikeW(rand.pop.dAIC)
+#~ decompa <- function(aa, prefix="") {
+#~ 	ss <- strsplit(aa, split="\\.|x")
+#~ 	cbind(paste0(prefix, "a.", sapply(ss, "[", 2)), paste0(prefix, "a.", sapply(ss, "[", 3)))
+#~ }
 
 
-# Focus on lines
+f.W.d  <- filter.effects(fixed.line$Weight$a.d, "d")
+f.W.aa <- filter.effects(fixed.line$Weight$a.aa, "aa")
+m.W.ee <- filter.effects(fixed.multi.line$Weight$a.aa.ee, "ee")
+f.F.d  <- filter.effects(fixed.line$Fitness$a.d, "d")
+f.F.aa <- filter.effects(fixed.line$Fitness$a.aa, "aa")
+m.F.ee <- filter.effects(fixed.multi.line$Fitness$a.aa.ee, "ee")
 
-rand.line <- list(
-	Weight = list(
-		a      = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Weight, what=c("a")),
-		a.d    = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Weight, what=c("a", "d")),
-		a.aa   = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Weight, what=c("a", "aa")),
-		a.d.aa = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Weight, what=c("a", "d", "aa"))),
-	Fitness = list(
-		a      = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Fitness, what=c("a")),
-		a.d    = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Fitness, what=c("a", "d")),
-		a.aa   = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Fitness, what=c("a", "aa")),
-		a.d.aa = fit.Npop.Fmu.rand(dd$Mother_line, dd$Father_line, dd$Gen, dd$Fitness, what=c("a", "d", "aa"))))
+xlim.W <- range(c(f.W.d, f.W.aa), na.rm=TRUE)
+xlim.F <- range(c(f.F.d, f.F.aa), na.rm=TRUE)
 
-rand.line.dAIC <- lapply(rand.line, function(xx) { aic <- sapply(xx, function(xxx) xxx$likelihood$cAIC); aic-min(aic) })
 
-barplot.AkaikeW(rand.line.dAIC)
+pdf("../results/Fneffectdist.pdf", width=15, height=15)
+	layout(cbind(1:3, 4:6))
+	
+	hist(f.W.d,  breaks=20, xlab="Dominance effect", main="Weight", xlim=xlim.W)
+	abline(v=mean(f.W.d, na.rm=TRUE), col="red", lwd=3)
+	hist(f.W.aa, breaks=20, xlab="A x A effect", main="", xlim=xlim.W)
+	abline(v=mean(f.W.aa, na.rm=TRUE), col="red", lwd=3)
+	hist(m.W.ee, breaks=20, xlab=expression(epsilon*" coefficient"), main="")
+	abline(v=mean(m.W.ee, na.rm=TRUE), col="red", lwd=3)
+	
+	hist(f.F.d,  breaks=20, xlab="Dominance effect", main="Fitness", xlim=xlim.F)
+	abline(v=mean(f.F.d, na.rm=TRUE), col="red", lwd=3)
+	hist(f.F.aa, breaks=20, xlab="A x A effect", main="", xlim=xlim.F)
+	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
+	hist(m.F.ee, breaks=20, xlab=expression(epsilon*" coefficient"), main="")
+	abline(v=mean(m.F.ee, na.rm=TRUE), col="red", lwd=3)
+dev.off()

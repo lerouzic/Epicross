@@ -170,6 +170,10 @@ fit.Npop.Fmu.rand <- function(fP1, fP2, fgen, phen, what=c("a", "d", "aa")) {
 	hglm(X=do.call(cbind, lapply(allZ, rowSums)), y=phen, Z=Z, RandC=sapply(allZ, ncol), calc.like=TRUE)
 }
 
+filter.effects <- function(model, what="a") {
+	mm <- coef(model)
+	mm[grep(paste0("^Z?", what, "\\."), names(mm))]
+}
 
 fit.2pop <- function(P1, P2, F1, F2) {
 	start <- fit.2pop.noDD(P1, P2, F1, F2)
