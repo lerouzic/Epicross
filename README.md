@@ -21,8 +21,8 @@ When dealing with more than 2 populations, the reference cannot be the F2 betwee
 | ---------- | ----------- |
 | $P_i$         | $\bar z + A_i$ |
 | $P_j$         | $\bar z + A_j$ |
-| $F1_{ij}$     | $\bar z + \frac{1}{2} A_i + \frac{1}{2} A_j + 2D_{ij} - AA_{ij}
-| $F2_{ij}$     | $\bar z + \frac{1}{2} A_i + \frac{1}{2} A_j +  D_{ij} - AA_{ij} - DD_{ij} |
+| $F1_{ij}$     | $\bar z + \frac{1}{2} A_i + \frac{1}{2} A_j + 2D_{ij} - AA_{ij}$          |
+| $F2_{ij}$     | $\bar z + \frac{1}{2} A_i + \frac{1}{2} A_j +  D_{ij} - AA_{ij} - DD_{ij}$ |
 
 This full model requires 5 parameters for each pair of populations (P1, P2, F1, F2), and thus cannot be fit as such. Two strategies have been used: 
 * Neglect the DxD epistatic interaction and fit a linear model with only 4 parameters.
