@@ -71,6 +71,9 @@ dd <- read.table("../data/data_clean.txt", stringsAsFactors=FALSE)
 dd$Mother_line <- sub("-", "L", dd$Mother_line)
 dd$Father_line <- sub("-", "L", dd$Father_line)
 
+#~ dd$Weight <- log(dd$Weight)
+#~ dd$Fitness <- log(dd$Fitness)
+
 
 ########### Fixed-effect linear model ##############
 
@@ -173,6 +176,53 @@ pdf("../results/FnAICWlineMlin.pdf", width=15, height=10)
 dev.off()
 
 
+fixed.summary.line <- list(
+	Weight = list(
+		a      = fixed.line$Weight$a, 
+		a.d    = fixed.line$Weight$a.d, 
+		a.aa   = fixed.line$Weight$a.aa, 
+#~ 		a.ee   = fixed.multi.line$Weight$a.aa.ee, 
+		a.d.aa = fixed.line$Weight$a.d.aa), 
+	Fitness = list(
+		a      = fixed.line$Fitness$a, 
+		a.d    = fixed.line$Fitness$a.d, 
+		a.aa   = fixed.line$Fitness$a.aa, 
+#~ 		a.ee   = fixed.multi.line$Weight$a.aa.ee, 
+		a.d.aa = fixed.line$Fitness$a.d.aa)
+	)
+
+fixed.summary.pop <- list(
+	Weight = list(
+		a      = fixed.pop$Weight$a, 
+		a.d    = fixed.pop$Weight$a.d, 
+		a.aa   = fixed.pop$Weight$a.aa, 
+		a.d.aa = fixed.pop$Weight$a.d.aa), 
+	Fitness = list(
+		a      = fixed.pop$Fitness$a, 
+		a.d    = fixed.pop$Fitness$a.d, 
+		a.aa   = fixed.pop$Fitness$a.aa, 
+		a.d.aa = fixed.pop$Fitness$a.d.aa)
+	)
+
+sink("../results/AICline.txt")
+	lapply(fixed.summary.line, function(tt)
+		data.frame(
+			logLik = sapply(tt, logLik), 
+			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
+			DeltaAIC = sapply(tt, AIC) - min(sapply(tt, AIC))
+		)) 
+sink()
+
+sink("../results/AICpop.txt")
+	lapply(fixed.summary.pop, function(tt)
+		data.frame(
+			logLik = sapply(tt, logLik), 
+			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
+			DeltaAIC = sapply(tt, AIC) - min(sapply(tt, AIC))
+		)) 
+sink()
+
+
 ################ Distribution of effects
 
 #~ decompa <- function(aa, prefix="") {
@@ -183,29 +233,23 @@ dev.off()
 
 f.W.d  <- filter.effects(fixed.line$Weight$a.d, "d")
 f.W.aa <- filter.effects(fixed.line$Weight$a.aa, "aa")
-m.W.ee <- filter.effects(fixed.multi.line$Weight$a.aa.ee, "ee")
 f.F.d  <- filter.effects(fixed.line$Fitness$a.d, "d")
 f.F.aa <- filter.effects(fixed.line$Fitness$a.aa, "aa")
-m.F.ee <- filter.effects(fixed.multi.line$Fitness$a.aa.ee, "ee")
 
 xlim.W <- range(c(f.W.d, f.W.aa), na.rm=TRUE)
 xlim.F <- range(c(f.F.d, f.F.aa), na.rm=TRUE)
 
 
-pdf("../results/Fneffectdist.pdf", width=15, height=15)
-	layout(cbind(1:3, 4:6))
+pdf("../results/Fneffectdist.pdf", width=6, height=6)
+	layout(cbind(1:2, 3:4))
 	
 	hist(f.W.d,  breaks=20, xlab="Dominance effect", main="Weight", xlim=xlim.W)
 	abline(v=mean(f.W.d, na.rm=TRUE), col="red", lwd=3)
 	hist(f.W.aa, breaks=20, xlab="A x A effect", main="", xlim=xlim.W)
 	abline(v=mean(f.W.aa, na.rm=TRUE), col="red", lwd=3)
-	hist(m.W.ee, breaks=20, xlab=expression(epsilon*" coefficient"), main="")
-	abline(v=mean(m.W.ee, na.rm=TRUE), col="red", lwd=3)
 	
 	hist(f.F.d,  breaks=20, xlab="Dominance effect", main="Fitness", xlim=xlim.F)
 	abline(v=mean(f.F.d, na.rm=TRUE), col="red", lwd=3)
 	hist(f.F.aa, breaks=20, xlab="A x A effect", main="", xlim=xlim.F)
 	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
-	hist(m.F.ee, breaks=20, xlab=expression(epsilon*" coefficient"), main="")
-	abline(v=mean(m.F.ee, na.rm=TRUE), col="red", lwd=3)
 dev.off()
