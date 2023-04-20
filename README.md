@@ -1,12 +1,9 @@
-# Data and models corresponding to the manuscript
-
-<span font-size:24em;" style="text-align: center;">
-Detecting directional epistasis and dominance from cross-line analyses in Alpine populations of _Arabidopsis thaliana_
+# Detecting directional epistasis and dominance from cross-line analyses in Alpine populations of *Arabidopsis thaliana*
 
 by Arnaud Le Rouzic, Marie Roumet, Alex Widmer, and Josselin Clo
-</span>
 
-## Organization
+
+## Organization
 
 This repository contains:
 * **src**, the R scripts
