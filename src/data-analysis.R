@@ -79,3 +79,21 @@ pdf("../results/FigS1.pdf", width=12, height=6)
 	crossfig2(crosses.pops$Weight, main="Weight")
 	crossfig2(crosses.pops$Fitness, main="Siliques")
 dev.off()
+
+	dd.intrapop <- dd[dd$Mother_pop == dd$Father_pop,]
+	dd.intrapop$cross <- with(dd.intrapop, paste0(Mother_pop, "-", sapply(strsplit(Mother_line, split="-"), function(x) x[2]), "x", sapply(strsplit(Father_line, split="-"), function(x) x[2])))
+
+pdf("../results/FigS2a.pdf", width=12, height=6)
+	par(mar=c(6,4,1,1))
+	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
+	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)], las=2, ylab="Weight (g)")
+	legend("topright", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
+dev.off()
+
+pdf("../results/FigS2b.pdf", width=12, height=6)
+	par(mar=c(6,4,1,1))
+	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
+	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)], las=2, ylab="Number of siliques")
+	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
+dev.off()
+
