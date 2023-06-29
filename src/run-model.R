@@ -47,8 +47,10 @@ sink()
 
 ################ Distribution of effects #################
 
+f.W.a  <- filter.effects(fixed.line$Weight$a, "a")
 f.W.d  <- filter.effects(fixed.line$Weight$a.d, "d")
 f.W.aa <- filter.effects(fixed.line$Weight$a.aa, "aa")
+f.F.a  <- filter.effects(fixed.line$Fitness$a, "a")
 f.F.d  <- filter.effects(fixed.line$Fitness$a.d, "d")
 f.F.aa <- filter.effects(fixed.line$Fitness$a.aa, "aa")
 
@@ -69,3 +71,20 @@ pdf("../results/Fig2.pdf", width=6, height=6)
 	hist(f.F.aa, breaks=20, xlab="A x A effect", main="", xlim=xlim.F)
 	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
 dev.off()
+
+
+sink("../results/TableS5.txt")
+	setNames(data.frame(
+		c(	round(sd  (f.W.a,  na.rm=TRUE), digits=3), 
+			round(mean(f.W.d,  na.rm=TRUE), digits=3), 
+			round(sd  (f.W.d,  na.rm=TRUE), digits=3), 
+			round(mean(f.W.aa, na.rm=TRUE), digits=3), 
+			round(sd  (f.W.aa, na.rm=TRUE), digits=3)), 
+		c(	round(sd  (f.F.a,  na.rm=TRUE), digits=0), 
+			round(mean(f.F.d,  na.rm=TRUE), digits=0), 
+			round(sd  (f.F.d,  na.rm=TRUE), digits=0), 
+			round(mean(f.F.aa, na.rm=TRUE), digits=0), 
+			round(sd  (f.F.aa, na.rm=TRUE), digits=0)), 
+		row.names=c("Additive(sd)", "Dominance(mean)", "Dominance(sd)", "Epistasis(mean)" ,"Epistasis(sd)")
+		), nm=c(weight.name, silique.name))
+sink()
