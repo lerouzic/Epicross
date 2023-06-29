@@ -35,13 +35,49 @@ fixed.summary.line <- list(
 		a.d.aa = fixed.line$Fitness$a.d.aa)
 	)
 
-################## Writing the AIC table ################
+
+fixed.pop <- list(
+	Weight = list(
+		a      = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a")),
+		a.d    = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "d")),
+		a.aa   = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "aa")),
+		a.d.aa = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Weight, what=c("a", "d", "aa"))),
+	Fitness = list(
+		a      = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a")),
+		a.d    = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "d")),
+		a.aa   = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "aa")),
+		a.d.aa = fit.Npop.Fmu(dd$Mother_pop, dd$Father_pop, dd$Gen, dd$Fitness, what=c("a", "d", "aa"))))
+
+
+fixed.summary.pop <- list(
+	Weight = list(
+		a      = fixed.pop$Weight$a, 
+		a.d    = fixed.pop$Weight$a.d, 
+		a.aa   = fixed.pop$Weight$a.aa, 
+		a.d.aa = fixed.pop$Weight$a.d.aa), 
+	Fitness = list(
+		a      = fixed.pop$Fitness$a, 
+		a.d    = fixed.pop$Fitness$a.d, 
+		a.aa   = fixed.pop$Fitness$a.aa, 
+		a.d.aa = fixed.pop$Fitness$a.d.aa)
+	)
+
+################## Writing the AIC tables ################
 sink("../results/Table1.txt")
 	setNames(lapply(fixed.summary.line, function(tt)
 		data.frame(
-			logLik = sapply(tt, logLik), 
+			logLik = round(sapply(tt, logLik), digits=2), 
 			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
-			DeltaAIC = sapply(tt, AIC) - min(sapply(tt, AIC))
+			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
+		)), nm=c(weight.name, silique.name))
+sink()
+
+sink("../results/TableS4.txt")
+	setNames(lapply(fixed.summary.pop, function(tt)
+		data.frame(
+			logLik = round(sapply(tt, logLik), digits=2), 
+			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
+			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
 		)), nm=c(weight.name, silique.name))
 sink()
 
