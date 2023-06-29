@@ -1,3 +1,4 @@
+
 col <- c(
 		ref="darkgray", 
 		F1 ="orange", 
@@ -8,4 +9,7 @@ col <- c(
 		
 data.file <- "../data/data_clean.txt"
 
+col.pops <- setNames(viridis::magma(6), nm=c("SA11","SA16", "SA17", "SA2", "SA3", "SA4"))
 
+weight.name <- "Dry Weight (g)"
+silique.name <- "Number of siliques"

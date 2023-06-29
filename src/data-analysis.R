@@ -69,15 +69,15 @@ crossfig2 <- function(dat, lwd=3, pch=1, ...) {
 
 pdf("../results/Fig1BC.pdf", width=12, height=6)
 	layout(t(1:2))
-	crossfig2(crosses.lines$Weight, main="Weight")
-	crossfig2(crosses.lines$Fitness, main="Siliques")
+	crossfig2(crosses.lines$Weight, main=weight.name)
+	crossfig2(crosses.lines$Fitness, main=silique.name)
 dev.off()
 
 
 pdf("../results/FigS1.pdf", width=12, height=6)
 	layout(t(1:2))
-	crossfig2(crosses.pops$Weight, main="Weight")
-	crossfig2(crosses.pops$Fitness, main="Siliques")
+	crossfig2(crosses.pops$Weight, main=paste0("Population: ", weight.name))
+	crossfig2(crosses.pops$Fitness, main=paste0("Population: ", silique.name))
 dev.off()
 
 	dd.intrapop <- dd[dd$Mother_pop == dd$Father_pop,]
@@ -86,14 +86,14 @@ dev.off()
 pdf("../results/FigS2a.pdf", width=12, height=6)
 	par(mar=c(6,4,1,1))
 	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
-	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)], las=2, ylab="Weight (g)")
-	legend("topright", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
+	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)], las=2, ylab=weight.name)
+	legend("topright", lty=0, pch=22, pt.bg=col.pops, pt.cex=2, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
 pdf("../results/FigS2b.pdf", width=12, height=6)
 	par(mar=c(6,4,1,1))
 	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
-	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)], las=2, ylab="Number of siliques")
+	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)], las=2, ylab=silique.name)
 	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
