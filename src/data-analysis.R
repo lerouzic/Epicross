@@ -56,12 +56,14 @@ crosses.pops <- lapply(mean.pops, function(cc) {
 
 
 crossfig2 <- function(dat, lwd=3, pch=1, ...) {
-	plot(dat$F1 - 0.5*(dat$P1 + dat$P2), dat$F1 - dat$F2, pch=pch,  xlab="F1 - Parents = 2D-AA", ylab="F1 - F2 = D",  ...)
+	x <- dat$F1 - 0.5*(dat$P1 + dat$P2)
+	y <- dat$F1 - dat$F2
+	plot(x, y, pch=pch,  xlab="F1 - Parents = 2D-AA", ylab="F1 - F2 = D",  ...)
 	abline(a=0, b=0.5, col=col["D"], lwd=2)
 	abline(a=0, b=0, lwd=2, col=col["AxA"])
 	points(0, 0, pch=16, col=col["add"], cex=3)
-	points(mean(dat$F1 - 0.5*(dat$P1 + dat$P2)), mean(dat$F1 - dat$F2), cex=3, pch=1, lwd=3)
-	legend("topleft", lty=c(0,0,1,1), pch=c(1, 16, NA, NA), col=c("black", col["add"], col["D"], col["AxA"]), legend=c("Data", "Additive", "Dominance", "AxA epistasis"))
+	lines(ellipse::ellipse(var(cbind(x, y))/nrow(dat), centre=c(mean(x), mean(y))), pch=1, lwd=3)
+	legend("topleft", lty=c(0,0), pch=c(1, 16), col=c("black", col["add"]), legend=c("Data", "Additive"))
 }
 
 
@@ -86,14 +88,18 @@ dev.off()
 pdf("../results/FigS2a.pdf", width=12, height=6)
 	par(mar=c(6,4,1,1))
 	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
-	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)], las=2, ylab=weight.name)
+	bycross.pop <- sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)
+	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
+	boxplot(bycross.Weight, col=col.pops[bycross.pop], las=2, ylab=weight.name, at=bycross.at)
 	legend("topright", lty=0, pch=22, pt.bg=col.pops, pt.cex=2, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
 pdf("../results/FigS2b.pdf", width=12, height=6)
 	par(mar=c(6,4,1,1))
 	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
-	boxplot(bycross.Weight, col=col.pops[sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)], las=2, ylab=silique.name)
+	bycross.pop <- sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)
+	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
+	boxplot(bycross.Fitness, col=col.pops[bycross.pop], las=2, ylab=silique.name, at=bycross.at)
 	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
