@@ -1,6 +1,8 @@
 source("../src/common.R")
 source("../src/model-tools.R")
 
+set.seed(1234)
+
 dd <- read.table(data.file, stringsAsFactors=FALSE)
 
 # The analysis does not like "-" in the line names (cannot use the line name as an effect in the model). 
@@ -124,3 +126,27 @@ sink("../results/TableS5.txt")
 		row.names=c("Additive(sd)", "Dominance(mean)", "Dominance(sd)", "Epistasis(mean)" ,"Epistasis(sd)")
 		), nm=c(weight.name, silique.name))
 sink()
+
+
+
+########################## Correlations
+
+partition.correlate <- function(phen="Weight", what.A = "d", what.B = "aa") {
+	partitionA <- do.call(c, lapply(split(dd, f=dd[,c("Mother_line", "Father_line", "Gen")]), function(minidd) rownames(minidd)[sample(rep(c(TRUE,FALSE), length.out=nrow(minidd)))]))
+	
+	ddA <- dd[ rownames(dd) %in% partitionA,]
+	ddB <- dd[!rownames(dd) %in% partitionA,]
+
+	fullmodel.ddA  <- fit.Npop.Fmu(ddA$Mother_line, ddA$Father_line, ddA$Gen, ddA[,phen], what=c("a", "d", "aa"))
+	fullmodel.ddB  <- fit.Npop.Fmu(ddB$Mother_line, ddB$Father_line, ddB$Gen, ddB[,phen], what=c("a", "d", "aa"))
+	
+	eff.A <- filter.effects(fullmodel.ddA, what.A,  r=TRUE)
+	eff.B <- filter.effects(fullmodel.ddB, what.B,  r=TRUE)[names(eff.A)]
+	cor(eff.A, eff.B, use="c")
+}
+
+# Correlations from the response to the reviewers:
+
+mean(unlist(replicate(100, partition.correlate("Weight", "d", "aa"))))
+mean(unlist(replicate(100, partition.correlate("Fitness", "d", "aa"))))
+
