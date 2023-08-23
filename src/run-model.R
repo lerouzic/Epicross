@@ -99,14 +99,14 @@ xlim.F <- range(c(f.F.d, f.F.aa), na.rm=TRUE)
 pdf("../results/Fig2.pdf", width=6, height=6)
 	layout(cbind(1:2, 3:4))
 	
-	hist(f.W.d,  breaks=20, xlab="Dominance (D)", main=weight.name, xlim=xlim.W)
+	hist(f.W.d,  breaks=20, xlab="Dominance (D) effect", main=weight.name, xlim=xlim.W)
 	abline(v=mean(f.W.d, na.rm=TRUE), col="red", lwd=3)
-	hist(f.W.aa, breaks=20, xlab="Epistasis (AA)", main="", xlim=xlim.W)
+	hist(f.W.aa, breaks=20, xlab="Epistasis (AxA) effect", main="", xlim=xlim.W)
 	abline(v=mean(f.W.aa, na.rm=TRUE), col="red", lwd=3)
 	
-	hist(f.F.d,  breaks=20, xlab="Dominance (D)", main=silique.name, xlim=xlim.F)
+	hist(f.F.d,  breaks=20, xlab="Dominance (D) effect", main=silique.name, xlim=xlim.F)
 	abline(v=mean(f.F.d, na.rm=TRUE), col="red", lwd=3)
-	hist(f.F.aa, breaks=20, xlab="Epistasis (AA)", main="", xlim=xlim.F)
+	hist(f.F.aa, breaks=20, xlab="Epistasis (AxA) effect", main="", xlim=xlim.F)
 	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
 dev.off()
 
