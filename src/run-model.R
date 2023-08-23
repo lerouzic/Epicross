@@ -96,8 +96,10 @@ xlim.W <- range(c(f.W.d, f.W.aa), na.rm=TRUE)
 xlim.F <- range(c(f.F.d, f.F.aa), na.rm=TRUE)
 
 
-pdf("../results/Fig2.pdf", width=6, height=6)
+pdf("../results/Fig2.pdf", width=fig.width, height=2*fig.height, pointsize=fig.pointsize)
 	layout(cbind(1:2, 3:4))
+	
+	par(cex=1, mar=fig.mar) # layout changes the point size
 	
 	hist(f.W.d,  breaks=20, xlab="Dominance (D) effect", main=weight.name, xlim=xlim.W)
 	abline(v=mean(f.W.d, na.rm=TRUE), col="red", lwd=3)
@@ -147,6 +149,6 @@ partition.correlate <- function(phen="Weight", what.A = "d", what.B = "aa") {
 
 # Correlations from the response to the reviewers:
 
-mean(unlist(replicate(100, partition.correlate("Weight", "d", "aa"))))
-mean(unlist(replicate(100, partition.correlate("Fitness", "d", "aa"))))
+# mean(unlist(replicate(100, partition.correlate("Weight", "d", "aa"))))
+# mean(unlist(replicate(100, partition.correlate("Fitness", "d", "aa"))))
 

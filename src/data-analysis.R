@@ -69,15 +69,17 @@ crossfig2 <- function(dat, lwd=3, pch=1, ...) {
 
 
 
-pdf("../results/Fig1BC.pdf", width=12, height=6)
+pdf("../results/Fig1BC.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
+	par(cex=1, mar=fig.mar) # layout changes the point size
 	crossfig2(crosses.lines$Weight, main=weight.name)
 	crossfig2(crosses.lines$Fitness, main=silique.name)
 dev.off()
 
 
-pdf("../results/FigS1.pdf", width=12, height=6)
+pdf("../results/FigS1.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
+	par(cex=1, mar=fig.mar) # layout changes the point size
 	crossfig2(crosses.pops$Weight, main=paste0("Population: ", weight.name))
 	crossfig2(crosses.pops$Fitness, main=paste0("Population: ", silique.name))
 dev.off()
@@ -85,8 +87,8 @@ dev.off()
 	dd.intrapop <- dd[dd$Mother_pop == dd$Father_pop,]
 	dd.intrapop$cross <- with(dd.intrapop, paste0(Mother_pop, "-", sapply(strsplit(Mother_line, split="-"), function(x) x[2]), "x", sapply(strsplit(Father_line, split="-"), function(x) x[2])))
 
-pdf("../results/FigS2a.pdf", width=12, height=6)
-	par(mar=c(6,4,1,1))
+pdf("../results/FigS2a.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
+	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
 	bycross.pop <- sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
@@ -94,8 +96,8 @@ pdf("../results/FigS2a.pdf", width=12, height=6)
 	legend("topright", lty=0, pch=22, pt.bg=col.pops, pt.cex=2, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
-pdf("../results/FigS2b.pdf", width=12, height=6)
-	par(mar=c(6,4,1,1))
+pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
+	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
 	bycross.pop <- sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
