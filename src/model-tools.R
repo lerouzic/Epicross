@@ -47,9 +47,12 @@ fit.Npop.Fmu <- function(fP1, fP2, fgen, phen, what=c("a", "d", "aa"), grandmean
 	lm(phen ~ 0 + Z)
 }
 
-filter.effects <- function(model, what="a") {
+filter.effects <- function(model, what="a", remove.Zname=FALSE) {
 	mm <- coef(model)
-	mm[grep(paste0("^Z?", what, "\\."), names(mm))]
+	ans <- mm[grep(paste0("^Z?", what, "\\."), names(mm))]
+	if (remove.Zname)
+		names(ans) <- sapply(strsplit(names(ans), split="\\."), "[", 2)
+	ans
 }
 
 fit.2pop <- function(P1, P2, F1, F2) {
