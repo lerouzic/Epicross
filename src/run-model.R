@@ -66,21 +66,21 @@ fixed.summary.pop <- list(
 
 ################## Writing the AIC tables ################
 sink("../results/Table1.txt")
-	setNames(lapply(fixed.summary.line, function(tt)
+	print(setNames(lapply(fixed.summary.line, function(tt)
 		data.frame(
 			logLik = round(sapply(tt, logLik), digits=2), 
 			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
 			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
-		)), nm=c(weight.name, silique.name))
+		)), nm=c(weight.name, silique.name)))
 sink()
 
 sink("../results/TableS4.txt")
-	setNames(lapply(fixed.summary.pop, function(tt)
+	print(setNames(lapply(fixed.summary.pop, function(tt)
 		data.frame(
 			logLik = round(sapply(tt, logLik), digits=2), 
 			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
 			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
-		)), nm=c(weight.name, silique.name))
+		)), nm=c(weight.name, silique.name)))
 sink()
 
 ################ Distribution of effects #################
@@ -114,7 +114,7 @@ dev.off()
 
 
 sink("../results/TableS5.txt")
-	setNames(data.frame(
+	print(setNames(data.frame(
 		c(	round(sd  (f.W.a,  na.rm=TRUE), digits=3), 
 			round(mean(f.W.d,  na.rm=TRUE), digits=3), 
 			round(sd  (f.W.d,  na.rm=TRUE), digits=3), 
@@ -126,7 +126,7 @@ sink("../results/TableS5.txt")
 			round(mean(f.F.aa, na.rm=TRUE), digits=0), 
 			round(sd  (f.F.aa, na.rm=TRUE), digits=0)), 
 		row.names=c("Additive(sd)", "Dominance(mean)", "Dominance(sd)", "Epistasis(mean)" ,"Epistasis(sd)")
-		), nm=c(weight.name, silique.name))
+		), nm=c(weight.name, silique.name)))
 sink()
 
 
