@@ -66,6 +66,20 @@ crossfig2 <- function(dat, lwd=3, pch=1, ...) {
 	legend("topleft", lty=c(0,0), pch=c(1, 16), col=c("black", col["add"]), legend=c("Data", "Additive"))
 }
 
+draw_stars <- function(y1, y2, y3, p) {
+	stars <- function(p) ifelse(p < 0.001, "***", ifelse(p < 0.01, "**", ifelse(p < 0.05, "*", "")))
+	# Very specialized use; contrasts are expected to be in the right order
+	ps <- stars(p)
+	x1 <- c(-1, 2, 5, 8, 9, 4.5, 8, 8)
+	x2 <- c(-1, 1, 4, 7, 8, 1.5, 1.5, 4.5)
+	y  <- c(-1, y1, y1, y1, y1, y2, y3, y2)
+	for (i in seq_along(p)) {
+		if (i > 1 && ps[i] != "") {
+			arrows(x0=x1[i]-0.1, x1=x2[i]+0.1, y0=y[i], angle=90, length=0.005, code="3")
+			text(0.5*x1[i]+0.5*x2[i], y[i], ps[i], adj=c(0.5,0.2))
+		}
+	}
+}
 
 
 
@@ -103,5 +117,45 @@ pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=f
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
 	boxplot(bycross.Fitness, col=col.pops[bycross.pop], las=2, ylab=silique.name, at=bycross.at)
 	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
+dev.off()
+
+
+require(multcomp)
+
+pdf("../results/FigS4.pdf", width=fig.width, height=fig.height, pointsize=fig.pointsize)
+	layout(t(1:2))
+	par(cex=1, mar=fig.mar+c(2,0,0,0)) 
+	
+	mother_eco <- ifelse(dd$Mother_pop %in% names(col.pops)[1:3], "High", "Low")
+	father_eco <- ifelse(dd$Father_pop %in% names(col.pops)[1:3], "High", "Low")
+	dd$Type <- factor(
+		ifelse(dd$Mother_pop == dd$Father_pop, 
+		       ifelse(dd$Mother_line == dd$Father_line, paste0("Self_", mother_eco), paste0("Within_", mother_eco)),
+		       ifelse(mother_eco == father_eco, paste0(mother_eco, " x ", father_eco), "High x Low")),
+		levels = c("Self_High", "Self_Low", "Within_High", "Within_Low", "High x High", "High x Low", "Low x Low"))
+	
+	# Contrasts
+	Type.ct <- rbind(
+		`Intercept`     = c(1, 0, 0, 0, 0, 0, 0),
+		`Self_Low-High` = c(-1,1, 0, 0, 0, 0, 0),
+		`Within_Low-High`=c(0, 0,-1, 1, 0, 0, 0),
+		`HL-HH`          =c(0, 0, 0, 0,-1, 1, 0),
+		`LL-HL`          =c(0, 0, 0, 0, 0,-1, 1),
+		`Within-Self`    =c(-0.5,-0.5,0.5,0.5,0,0,0),
+		`Between-Self`   =c(-0.5,-0.5,0,0,1/3,1/3,1/3),
+		`Between-Within` =c(0, 0,-0.5,-0.5,1/3,1/3,1/3))
+	
+	llw <- lm(Weight ~ 0 + Type, data=dd)
+	llf <- lm(Fitness ~ 0 + Type, data=dd)
+	
+	pvalw <- summary(glht(llw, linfct=mcp(Type=Type.ct)), test=adjusted("none"))$test$pvalues
+	pvalf <- summary(glht(llf, linfct=mcp(Type=Type.ct)), test=adjusted("none"))$test$pvalues
+
+	boxplot(dd$Weight ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 1.5), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=weight.name, las=2)
+	draw_stars(y1=1.4, y2=1.45, y3=1.5, p=pvalw)
+	
+	boxplot(dd$Fitness ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 3100), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=silique.name, las=2)
+	draw_stars(y1=2600, y2=2800, y3=3000, p=pvalf)
+
 dev.off()
 

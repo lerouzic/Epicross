@@ -9,7 +9,7 @@ col <- c(
 		
 data.file <- "../data/data_clean.txt"
 
-col.pops <- setNames(rev(viridis::magma(10)), nm=c("SA11","SA16", "SA17", "SA2", "SA3", "SA4"))[1:6]
+col.pops <- setNames(c(RColorBrewer::brewer.pal(3, "Purples"), RColorBrewer::brewer.pal(3, "Greens")), nm=c("SA11","SA16", "SA17", "SA2", "SA3", "SA4"))
 
 weight.name <- "Dry Weight (g)"
 silique.name <- "Number of siliques"
