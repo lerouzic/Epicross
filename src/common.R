@@ -11,8 +11,8 @@ data.file <- "../data/data_clean.txt"
 
 col.pops <- setNames(c(RColorBrewer::brewer.pal(3, "Purples"), RColorBrewer::brewer.pal(3, "Greens")), nm=c("SA11","SA16", "SA17", "SA2", "SA3", "SA4"))
 
-weight.name <- "Dry Weight (g)"
-silique.name <- "Number of siliques"
+weight.name <- "Dry biomass (g)"
+silique.name <- "Estimated number of siliques"
 
 fig.width  <- 5.9 # 15 cm in inches
 fig.height <- 2.0 #  5 cm in inches

@@ -94,28 +94,39 @@ dev.off()
 pdf("../results/FigS1.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
 	par(cex=1, mar=fig.mar) # layout changes the point size
-	crossfig2(crosses.pops$Weight, main=paste0("Population: ", weight.name))
-	crossfig2(crosses.pops$Fitness, main=paste0("Population: ", silique.name))
+	crossfig2(crosses.pops$Weight, main=paste0("Pop: ", weight.name))
+	crossfig2(crosses.pops$Fitness, main=paste0("Pop: ", silique.name))
 dev.off()
 
 	dd.intrapop <- dd[dd$Mother_pop == dd$Father_pop,]
 	dd.intrapop$cross <- with(dd.intrapop, paste0(Mother_pop, "-", sapply(strsplit(Mother_line, split="-"), function(x) x[2]), "x", sapply(strsplit(Father_line, split="-"), function(x) x[2])))
 
+linesort <- function(linenames) {
+	ss <- strsplit(linenames, split="[-x]")
+	sss <- split(ss, sapply(ss, "[", 1))
+	o <- unlist(lapply(sss, function(x) x[order(sapply(x, "[", 2) == sapply(x, "[", 3))]), recursive=FALSE)
+	paste0(sapply(o, "[", 1), "-", sapply(o, "[", 2), "x", sapply(o, "[", 3))
+}
+
 pdf("../results/FigS2a.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
 	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
+	bycross.Weight <-  bycross.Weight[linesort(names(bycross.Weight))]
+	maternal.pop <- sapply(strsplit(names(bycross.Weight), split="[-x]"), function(x) length(unique(x))) == 2
 	bycross.pop <- sapply(strsplit(names(bycross.Weight), split="-"), FUN="[", 1)
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
-	boxplot(bycross.Weight, col=col.pops[bycross.pop], las=2, ylab=weight.name, at=bycross.at)
+	boxplot(bycross.Weight, col=col.pops[bycross.pop], las=2, ylab=weight.name, at=bycross.at, border=ifelse(maternal.pop, "black", "grey40"))
 	legend("topright", lty=0, pch=22, pt.bg=col.pops, pt.cex=2, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
 pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
 	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
+	bycross.Fitness <-  bycross.Fitness[linesort(names(bycross.Fitness))]
+	maternal.pop <- sapply(strsplit(names(bycross.Fitness), split="[-x]"), function(x) length(unique(x))) == 2
 	bycross.pop <- sapply(strsplit(names(bycross.Fitness), split="-"), FUN="[", 1)
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
-	boxplot(bycross.Fitness, col=col.pops[bycross.pop], las=2, ylab=silique.name, at=bycross.at)
+	boxplot(bycross.Fitness, col=col.pops[bycross.pop], las=2, ylab=silique.name, at=bycross.at, border=ifelse(maternal.pop, "black", "grey40"))
 	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
 dev.off()
 
@@ -152,7 +163,8 @@ pdf("../results/FigS4.pdf", width=fig.width, height=fig.height, pointsize=fig.po
 	pvalf <- summary(glht(llf, linfct=mcp(Type=Type.ct)), test=adjusted("none"))$test$pvalues
 
 	boxplot(dd$Weight ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 1.5), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=weight.name, las=2)
-	draw_stars(y1=1.4, y2=1.45, y3=1.5, p=pvalw)
+	draw_stars(y1=1.3, y2=1.45, y3=1.5, p=pvalw)
+	legend("topleft", fill=col.pops[c(2,5,NA)], legend=c("High", "Low", "Hybrid"), bty="n", horiz=TRUE)
 	
 	boxplot(dd$Fitness ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 3100), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=silique.name, las=2)
 	draw_stars(y1=2600, y2=2800, y3=3000, p=pvalf)
