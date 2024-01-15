@@ -20,6 +20,7 @@ crossfig2.theor <- function(cex.text=0.8, ...) {
 	text(0.7, 0.15, "D > 0\nAA < 0", col=col["ref"], cex=cex.text)
 	text(-0.7, -0.15, "D < 0\nAA > 0", col=col["ref"], cex=cex.text)
 	
+	
 	for (d in seq(sep.lines,2,by=sep.lines)) {
 		abline(h=c(d, -d), lty=3, col=adjustcolor(col["D"], 0.9))
 	}
@@ -28,13 +29,38 @@ crossfig2.theor <- function(cex.text=0.8, ...) {
 		abline(a=aa, b=0.5, lty=3, col=adjustcolor(col["AxA"], 0.9))
 		abline(a=-aa, b=0.5, lty=3, col=adjustcolor(col["AxA"], 0.9))
 	}
+}
+
+crossfig3.theor <- function(cex.text=0.8, ...) {
+	plot(NULL, xlim=c(-1, 1), ylim=c(-1, 1), xaxt="n", yaxt="n", xlab="F1 - Parents = 2D-AA", ylab="F1 - F2 = D",  ...)
+	axis(1, at=0)
+	axis(2, at=0)
+	
+	polygon(x=c(0, 0, -2, -2), y=c(-2, 2, 2, -1), border=NA, col="lightblue")
+	polygon(x=c(0, 0, 2, 2), y=c(-2, 2, 2, -1), border=NA, col="lightgreen")
+	
+	polygon(x=c(-2, -2, 2), y=c(-2, 2, 2), density=12, angle=-45, lwd=1, col="darkgray")
+
+	
+	abline(a=0, b=0.5, col=col["D"], lwd=2)
+	abline(a=0, b=0, lwd=2, col=col["AxA"])
+	points(0, 0, pch=16, col=col["add"], cex=3)
+	
+	text( 0.05, -0.95,  "F1 > Parents", col="darkgreen", cex=cex.text, pos=4)
+	text(-0.05, -0.95, "F1 < Parents", col="darkblue", cex=cex.text, pos=2)
+	
+	text(0.4, 0.55, "F2 < Parents", srt=45, col="black", cex=cex.text)
+	text(0.63, 0.52, "F2 > Parents", srt=45, col="black", cex=cex.text)
 	
 }
 
-pdf("../results/Fig1A.pdf", width=fig.width/3, height=fig.height, pointsize=fig.pointsize)
+pdf("../results/Fig1AB.pdf", width=2*fig.width/3, height=fig.height, pointsize=fig.pointsize)
 	par(mar=fig.mar)
+	layout(t(1:2))
 	crossfig2.theor()
+	crossfig3.theor()
 dev.off()
+
 
 simdyn.2loc <- function(mu=0, a=1, d=0, aa=0, self=0, g=50, sel=0.2, start="F2") {
 	# sel is the fitness difference between the largest and the lowest phenotype

@@ -83,7 +83,7 @@ draw_stars <- function(y1, y2, y3, p) {
 
 
 
-pdf("../results/Fig1BC.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
+pdf("../results/Fig1CD.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
 	par(cex=1, mar=fig.mar) # layout changes the point size
 	crossfig2(crosses.lines$Weight, main=weight.name)
