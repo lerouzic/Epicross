@@ -93,7 +93,7 @@ pdf("../results/Fig1CD.pdf", width=fig.width*2/3, height=fig.height, pointsize=f
 dev.off()
 
 
-pdf("../results/FigS1.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
+pdf("../results/FigS2.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
 	par(cex=1, mar=fig.mar+c(0,0,0,1)) # layout changes the point size
 	crossfig2(crosses.pops$Weight, main=paste0("Pop: ", weight.name))
@@ -112,7 +112,7 @@ linesort <- function(linenames) {
 	paste0(sapply(o, "[", 1), "-", sapply(o, "[", 2), "x", sapply(o, "[", 3))
 }
 
-pdf("../results/FigS2a.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
+pdf("../results/FigS3a.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
 	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Weight <- by(dd.intrapop$Weight, dd.intrapop$cross, FUN=c)
 	bycross.Weight <-  bycross.Weight[linesort(names(bycross.Weight))]
@@ -124,7 +124,7 @@ pdf("../results/FigS2a.pdf", width=fig.width, height=1.5*fig.height, pointsize=f
 	subpanel("(a)", line=0.7, adj=0)
 dev.off()
 
-pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
+pdf("../results/FigS3b.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
 	par(mar=fig.mar+c(2,0,0,0))
 	bycross.Fitness <- by(dd.intrapop$Fitness, dd.intrapop$cross, FUN=c)
 	bycross.Fitness <-  bycross.Fitness[linesort(names(bycross.Fitness))]
