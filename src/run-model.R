@@ -70,15 +70,17 @@ sink("../results/Table1.txt")
 		data.frame(
 			logLik = round(sapply(tt, logLik), digits=2), 
 			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
+			AIC    = round(sapply(tt, AIC), digits=2),
 			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
 		)), nm=c(weight.name, silique.name)))
 sink()
 
-sink("../results/TableS4.txt")
+sink("../results/TableS5.txt")
 	print(setNames(lapply(fixed.summary.pop, function(tt)
 		data.frame(
 			logLik = round(sapply(tt, logLik), digits=2), 
 			df     = sapply(tt, function(x) attributes(logLik(x))$df), 
+			AIC    = round(sapply(tt, AIC), digits=2),
 			DeltaAIC = round(sapply(tt, AIC) - min(sapply(tt, AIC)), digits=2)
 		)), nm=c(weight.name, silique.name)))
 sink()
@@ -112,43 +114,4 @@ pdf("../results/Fig2.pdf", width=fig.width, height=2*fig.height, pointsize=fig.p
 	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
 dev.off()
 
-
-sink("../results/TableS5.txt")
-	print(setNames(data.frame(
-		c(	round(sd  (f.W.a,  na.rm=TRUE), digits=3), 
-			round(mean(f.W.d,  na.rm=TRUE), digits=3), 
-			round(sd  (f.W.d,  na.rm=TRUE), digits=3), 
-			round(mean(f.W.aa, na.rm=TRUE), digits=3), 
-			round(sd  (f.W.aa, na.rm=TRUE), digits=3)), 
-		c(	round(sd  (f.F.a,  na.rm=TRUE), digits=0), 
-			round(mean(f.F.d,  na.rm=TRUE), digits=0), 
-			round(sd  (f.F.d,  na.rm=TRUE), digits=0), 
-			round(mean(f.F.aa, na.rm=TRUE), digits=0), 
-			round(sd  (f.F.aa, na.rm=TRUE), digits=0)), 
-		row.names=c("Additive(sd)", "Dominance(mean)", "Dominance(sd)", "Epistasis(mean)" ,"Epistasis(sd)")
-		), nm=c(weight.name, silique.name)))
-sink()
-
-
-
-########################## Correlations
-
-partition.correlate <- function(phen="Weight", what.A = "d", what.B = "aa") {
-	partitionA <- do.call(c, lapply(split(dd, f=dd[,c("Mother_line", "Father_line", "Gen")]), function(minidd) rownames(minidd)[sample(rep(c(TRUE,FALSE), length.out=nrow(minidd)))]))
-	
-	ddA <- dd[ rownames(dd) %in% partitionA,]
-	ddB <- dd[!rownames(dd) %in% partitionA,]
-
-	fullmodel.ddA  <- fit.Npop.Fmu(ddA$Mother_line, ddA$Father_line, ddA$Gen, ddA[,phen], what=c("a", "d", "aa"))
-	fullmodel.ddB  <- fit.Npop.Fmu(ddB$Mother_line, ddB$Father_line, ddB$Gen, ddB[,phen], what=c("a", "d", "aa"))
-	
-	eff.A <- filter.effects(fullmodel.ddA, what.A,  r=TRUE)
-	eff.B <- filter.effects(fullmodel.ddB, what.B,  r=TRUE)[names(eff.A)]
-	cor(eff.A, eff.B, use="c")
-}
-
-# Correlations from the response to the reviewers:
-
-# mean(unlist(replicate(100, partition.correlate("Weight", "d", "aa"))))
-# mean(unlist(replicate(100, partition.correlate("Fitness", "d", "aa"))))
 
