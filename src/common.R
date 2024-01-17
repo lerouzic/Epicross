@@ -1,4 +1,8 @@
 
+subpanel <- function(x, adj=0.025, col="black", line=-1, cex=1.4, outer=FALSE) {
+	title(adj=adj, main=x, cex.main=cex, col.main=col, line=line, outer=outer)
+}
+
 col <- c(
 		ref="darkgray", 
 		F1 ="orange", 

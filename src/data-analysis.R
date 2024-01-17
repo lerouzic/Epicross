@@ -87,15 +87,19 @@ pdf("../results/Fig1CD.pdf", width=fig.width*2/3, height=fig.height, pointsize=f
 	layout(t(1:2))
 	par(cex=1, mar=fig.mar) # layout changes the point size
 	crossfig2(crosses.lines$Weight, main=weight.name)
-	crossfig2(crosses.lines$Fitness, main=silique.name)
+	subpanel("(c)", line=0.7, adj=0)
+	crossfig2(crosses.lines$Fitness, main=paste0("(d) ", silique.name))
+	#subpanel("(d)", line=0.5, adj=0) # the title is too wide and overlaps with the panel label; workaround is to add the panel name in the title
 dev.off()
 
 
 pdf("../results/FigS1.pdf", width=fig.width*2/3, height=fig.height, pointsize=fig.pointsize)
 	layout(t(1:2))
-	par(cex=1, mar=fig.mar) # layout changes the point size
+	par(cex=1, mar=fig.mar+c(0,0,0,1)) # layout changes the point size
 	crossfig2(crosses.pops$Weight, main=paste0("Pop: ", weight.name))
-	crossfig2(crosses.pops$Fitness, main=paste0("Pop: ", silique.name))
+	subpanel("(a)", line=0.7, adj=0)
+
+	crossfig2(crosses.pops$Fitness, main=paste0("(b) Pop: ", silique.name))
 dev.off()
 
 	dd.intrapop <- dd[dd$Mother_pop == dd$Father_pop,]
@@ -117,6 +121,7 @@ pdf("../results/FigS2a.pdf", width=fig.width, height=1.5*fig.height, pointsize=f
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
 	boxplot(bycross.Weight, col=col.pops[bycross.pop], las=2, ylab=weight.name, at=bycross.at, border=ifelse(maternal.pop, "black", "grey40"))
 	legend("topright", lty=0, pch=22, pt.bg=col.pops, pt.cex=2, legend=names(col.pops), horiz=TRUE)
+	subpanel("(a)", line=0.7, adj=0)
 dev.off()
 
 pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=fig.pointsize)
@@ -128,6 +133,8 @@ pdf("../results/FigS2b.pdf", width=fig.width, height=1.5*fig.height, pointsize=f
 	bycross.at  <- seq_along(bycross.pop) + cumsum(c(0,2*diff(as.numeric(factor(bycross.pop)))))
 	boxplot(bycross.Fitness, col=col.pops[bycross.pop], las=2, ylab=silique.name, at=bycross.at, border=ifelse(maternal.pop, "black", "grey40"))
 	#legend("topleft", lty=0, pch=15, col=col.pops, legend=names(col.pops), horiz=TRUE)
+	subpanel("(b)", line=0.7, adj=0)
+
 dev.off()
 
 
@@ -165,9 +172,12 @@ pdf("../results/FigS4.pdf", width=fig.width, height=fig.height, pointsize=fig.po
 	boxplot(dd$Weight ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 1.5), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=weight.name, las=2)
 	draw_stars(y1=1.3, y2=1.45, y3=1.5, p=pvalw)
 	legend("topleft", fill=col.pops[c(2,5,NA)], legend=c("High", "Low", "Hybrid"), bty="n", horiz=TRUE)
+	subpanel("(a)", line=0.7, adj=0)
 	
 	boxplot(dd$Fitness ~ dd$Type, at=c(1:2, 4:5, 7:9), ylim=c(0, 3100), col=col.pops[c(2,5,2,5,2,NA,5)], xlab="", ylab=silique.name, las=2)
 	draw_stars(y1=2600, y2=2800, y3=3000, p=pvalf)
+	subpanel("(b)", line=0.7, adj=0)
+
 
 dev.off()
 

@@ -99,19 +99,26 @@ xlim.F <- range(c(f.F.d, f.F.aa), na.rm=TRUE)
 
 
 pdf("../results/Fig2.pdf", width=fig.width, height=2*fig.height, pointsize=fig.pointsize)
-	layout(cbind(1:2, 3:4))
+	layout(rbind(1:2, 3:4))
 	
 	par(cex=1, mar=fig.mar) # layout changes the point size
 	
 	hist(f.W.d,  breaks=20, xlab="Dominance (D) effect", main=weight.name, xlim=xlim.W)
 	abline(v=mean(f.W.d, na.rm=TRUE), col="red", lwd=3)
-	hist(f.W.aa, breaks=20, xlab="Epistasis (AxA) effect", main="", xlim=xlim.W)
-	abline(v=mean(f.W.aa, na.rm=TRUE), col="red", lwd=3)
+	subpanel("(a)", line=0.5, adj=0)
 	
 	hist(f.F.d,  breaks=20, xlab="Dominance (D) effect", main=silique.name, xlim=xlim.F)
 	abline(v=mean(f.F.d, na.rm=TRUE), col="red", lwd=3)
+	subpanel("(b)", line=0.5, adj=0)
+	
+	hist(f.W.aa, breaks=20, xlab="Epistasis (AxA) effect", main="", xlim=xlim.W)
+	abline(v=mean(f.W.aa, na.rm=TRUE), col="red", lwd=3)
+	subpanel("(c)", line=0.5, adj=0)
+	
 	hist(f.F.aa, breaks=20, xlab="Epistasis (AxA) effect", main="", xlim=xlim.F)
 	abline(v=mean(f.F.aa, na.rm=TRUE), col="red", lwd=3)
+	subpanel("(d)", line=0.5, adj=0)
+	
 dev.off()
 
 

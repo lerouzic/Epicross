@@ -58,7 +58,9 @@ pdf("../results/Fig1AB.pdf", width=2*fig.width/3, height=fig.height, pointsize=f
 	par(mar=fig.mar)
 	layout(t(1:2))
 	crossfig2.theor()
+	subpanel("(a)", line=0.5, adj=0)
 	crossfig3.theor()
+	subpanel("(b)", line=0.5, adj=0)
 dev.off()
 
 
@@ -112,6 +114,7 @@ pdf("../results/Fig3.pdf", width=fig.width, height=fig.height, pointsize=fig.poi
 	for (ns in rev(names(self)))
 		lines(simdyn.2loc(mu=0.43, a=0.11, d=0.03, aa=0, self=self[ns], g=gg), col=ns)
 	legend("bottomright", lty=c(rep(1,length(self)), 2), col=c(names(self), names(self)[1]), legend=c(paste0("A + D, selfing=", self), paste0("A only, selfing=", self[1])))
+	subpanel("(a)", line=0.7, adj=0)
 
 
 	plot(NULL, xlim=c(0,gg), ylim=c(700, 1150), xlab="Generations", ylab=silique.name)
@@ -119,5 +122,7 @@ pdf("../results/Fig3.pdf", width=fig.width, height=fig.height, pointsize=fig.poi
 	for (ns in rev(names(self)))
 		lines(simdyn.2loc(mu=779, a=262, d=0, aa=83, self=self[ns], g=gg), col=ns)
 	legend("bottomright", lty=c(rep(1,length(self)), 2), col=c(names(self), names(self)[1]), legend=c(paste0("A + AA, selfing=", self), paste0("A only, selfing=", self[1])))
+	subpanel("(b)", line=0.7, adj=0)
+
 
 dev.off()
