@@ -12,6 +12,6 @@ This repository contains:
 
 ## Scripts
 
-* **src/fig-theor.R**     -> Produces Fig1A.pdf
-* **src/data_analysis.R** -> Produces Fig1BC.pdf and FigS1.pdf
-* **src/run-model.R**     -> Produces Fig2.pdf and Table1.txt
+* **src/fig-theor.R**     -> Produces Fig1AB.pdf and Fig3.pdf
+* **src/data_analysis.R** -> Produces Fig1CD.pdf, FigS2.pdf, FigS3a.pdf, FigS3b.pdf, FigS4
+* **src/run-model.R**     -> Produces Fig2.pdf, Table1.txt, TableS5.txt
