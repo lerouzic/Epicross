@@ -1,11 +1,9 @@
-library(readxl)
-
-pheno.file    <- "Siliq_count_final.Rform.xls"
-position.file <- "Phenotype_data_final_Rform.xls"
+pheno.file    <- "Siliq_count_final.Rform.csv"
+position.file <- "Phenotype_data_final_Rform.csv"
 cross.file    <- "Croisements.csv"
 
-data.pheno    <- read_excel(pheno.file)
-data.position <- read_excel(position.file)
+data.pheno    <- read.csv(pheno.file)
+data.position <- read.csv(position.file)
 data.cross    <- read.csv(cross.file)
 
 ############################ Data fixes and corrections
@@ -17,7 +15,7 @@ data.pheno$Position[1118] <- "G2_P4_22"  # instead of "G2__P4_22"
 data.pheno$Position[1121] <- "G2_P4_18"  # instead of "G2__P4_18"
 
 dupl.lines <- c(
-	138,             # G1_P1_12  duplicated (lines 12 and 138),   line 138 is mostly NA
+    138,             # G1_P1_12  duplicated (lines 12 and 138),   line 138 is mostly NA
      66,             # G1_P25_10 duplicated (lines 66 and 319),   line 66 the weight is very low (35)
     279,             # G1_P23_12 duplicated (lines 279 and 400),  line 179 the weight is very low (37)
     397,             # G1_P23_11 duplicated (lines 397 and 639),  both equivalent, one has to be removed arbitrarily
@@ -44,13 +42,13 @@ Weight   <- data.pheno$Weight_tot
 Fitness  <- data.pheno$nb_siliq_total_estim
 
 final.data <- data.frame(
-	row.names   = Position,
-	Mother_line = factor(Mother_line), 
-	Mother_pop  = factor(vapply(strsplit(Mother_line, "-"), "[", 1, FUN.VALUE="A")),
-	Father_line = factor(Father_line),
-	Father_pop  = factor(vapply(strsplit(Father_line, "-"), "[", 1, FUN.VALUE="A")),
-	Gen         = factor(Gen),
-	Weight      = round(as.numeric(Weight), digits=3),
-	Fitness     = round(as.numeric(Fitness), digits=0))
+    row.names   = Position,
+    Mother_line = factor(Mother_line), 
+    Mother_pop  = factor(vapply(strsplit(Mother_line, "-"), "[", 1, FUN.VALUE="A")),
+    Father_line = factor(Father_line),
+    Father_pop  = factor(vapply(strsplit(Father_line, "-"), "[", 1, FUN.VALUE="A")),
+    Gen         = factor(Gen),
+    Weight      = round(as.numeric(Weight), digits=3),
+    Fitness     = round(as.numeric(Fitness), digits=0))
 
 write.table(final.data, file="data_clean.txt", quote=FALSE, sep="\t")
