@@ -33,3 +33,8 @@ Each line corresponds to a cross (1615 crosses documented). ``Mother_line`` and 
 * **src/fig-theor.R**     -> Produces Fig1AB.pdf and Fig3.pdf
 * **src/data_analysis.R** -> Produces Fig1CD.pdf, FigS2.pdf, FigS3a.pdf, FigS3b.pdf, FigS4
 * **src/run-model.R**     -> Produces Fig2.pdf, Table1.txt, TableS5.txt
+
+The analysis was run with R version 4.1.2 (2021-11-01). 
+
+It requires the external library ``multcomp`` and its dependencies (Hothorn T, Bretz F, Westfall P (2008). “Simultaneous Inference in General Parametric Models.” _Biometrical Journal_, *50*(3), 346-363.)
+
